@@ -1,32 +1,58 @@
+import TodoNew from "./components/todo/TodoNew";
+import TodoData from "./components/todo/TodoData";
+import "./components//todo/todo.scss";
+import logo from "./assets/react.svg";
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
-import "./App.css";
 
 const App = () => {
-  const [count, setCount] = useState(0);
+  const [todoList, setTodoList] = useState([
+    // { id: 1, name: "Huy" },
+    // { id: 2, name: "HCM" },
+  ]);
+
+  // const full = "Huy";
+  // const age = 26;
+  // const data = {
+  //   address: "HCM",
+  //   country: "Viet Nam",
+  // };
+  const addNewTodo = (name) => {
+    const newTodo = {
+      id: randomIntFromInterval(1, 1000000),
+      name: name,
+    };
+    setTodoList([...todoList, newTodo]);
+  };
+  const randomIntFromInterval = (min, max) => {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  };
+  const deleteTodo = (id) => {
+    const newTodo = todoList.filter(item => item.id !== id)
+    setTodoList(newTodo);
+  };
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="todo-container">
+        <div className="todo__title">
+          <h2>Todo List</h2>
+        </div>
+        <TodoNew addNewTodo={addNewTodo} />
+        {todoList.length > 0 ? (
+          <TodoData todoList={todoList} 
+          deleteTodo={deleteTodo} 
+          />
+        ) : (
+          <div className="todo-img">
+            <img src={logo} alt="" className="logo" />
+          </div>
+        )}
+
+        {/* {todoList.length === 0 && (
+          <div className="todo-img">
+            <img src={logo} alt="" className="logo" />
+          </div>
+        )} */}
       </div>
-      <h1>Hello World</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   );
 };
