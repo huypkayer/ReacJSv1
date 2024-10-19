@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Button, Form, Input, Radio } from "antd";
-import axios from "axios";
+import { Button, Form, Input, notification, Radio } from "antd";
+import { createUserAPI } from "../services/api.service";
 
 const UserForm = () => {
   const [fullName, setFullName] = useState("");
@@ -8,17 +8,17 @@ const UserForm = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
 
-const handleClick = () => {
-    const URL_BACKEND = "http://localhost:8080/api/v1/user";
-    const data = {
-        fullName:fullName,
-        email: email,
-        password: password,
-        phone: phone 
+  const handleClick = async () => {
+    const res = await createUserAPI(fullName, email, password, phone);
+    if (res.data) {
+      notification.success({
+        message: "create user",
+        description: "tao thanh cong",
+      });
     }
-    axios.post(URL_BACKEND,data)
-    console.log("check", {fullName,email,password,phone})
-}
+
+    console.log("check res: ", res.data);
+  };
 
   const [form] = Form.useForm();
   const [formLayout, setFormLayout] = useState("horizontal");
@@ -63,13 +63,26 @@ const handleClick = () => {
         />
       </Form.Item>
       <Form.Item label="Password">
-        <Input placeholder="input placeholder" type="password" value={password} onChange={(event)=>setPassword(event.target.value)}/>
+        <Input
+          placeholder="input placeholder"
+          type="password"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+        />
       </Form.Item>
       <Form.Item label="Phone">
-        <Input placeholder="input placeholder" value={phone} onChange={(event)=>{setPhone(event.target.value)}} />
+        <Input
+          placeholder="input placeholder"
+          value={phone}
+          onChange={(event) => {
+            setPhone(event.target.value);
+          }}
+        />
       </Form.Item>
       <Form.Item>
-        <Button type="primary" onClick={handleClick}>Submit</Button>
+        <Button type="primary" onClick={handleClick}>
+          Submit
+        </Button>
       </Form.Item>
     </Form>
   );
